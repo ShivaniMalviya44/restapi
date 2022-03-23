@@ -3,7 +3,12 @@ package com.assignment.restapi.model;
 import java.io.File;
 import java.util.ArrayList;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class LsModel {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(LsModel .class);
 	
 	private UserModel userModel = new UserModel() ;
 	
@@ -36,8 +41,9 @@ public class LsModel {
 	
 	public ArrayList<LsModel> list(){
 	ArrayList<LsModel> arraylist = new ArrayList<LsModel>();
+	LOGGER.info("Entering in the /ls method..");
     //File curDir = new File(".");
-    String cwd = userModel.curPath();
+    String cwd = userModel.getCwd();
     File curDir = new File(cwd);
     File[] filesList = curDir.listFiles();
     for(File f : filesList) {

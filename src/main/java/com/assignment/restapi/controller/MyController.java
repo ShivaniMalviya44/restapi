@@ -1,11 +1,15 @@
 package com.assignment.restapi.controller;
 
+import java.io.FileNotFoundException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -31,6 +35,8 @@ import com.assignment.restapi.util.JwtUtil;
 @RestController
 public class MyController {
 	
+	private static final Logger LOGGER = LoggerFactory.getLogger(MyController.class);
+	
 	@Autowired
 	private AuthenticationManager authenticationManager;
 	
@@ -50,21 +56,23 @@ public class MyController {
 		try {
 			this.authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(jwtRequest.getUsername(), jwtRequest.getPassword()));
 			
-		}catch(UsernameNotFoundException e)
+		}catch(UsernameNotFoundException ex)
 		{
-			e.printStackTrace();
-			throw new Exception("Bad Credential");
-		}catch(BadCredentialsException e)
+			LOGGER.error("User not found!");
+			return new ResponseEntity(ex.getMessage(), HttpStatus.NOT_FOUND);
+		}catch(BadCredentialsException ex)
 		{
-			e.printStackTrace();
-			throw new Exception("Bad Credential");
+			LOGGER.error("Bad Credential!");
+			return new ResponseEntity(ex.getMessage(), HttpStatus.NOT_FOUND);
 		}
 		
 		//fine area..
+		LOGGER.trace("Entering Method loadUserByUsername");
 		UserDetails userDetails = this.customUserDetailsService.loadUserByUsername(jwtRequest.getUsername());
 		
 		//to generate token
 		String Token = this.jwtUtil.generateToken(userDetails);
+		LOGGER.info("Generated Token");
 		System.out.println("JWT "+Token);
 		
 		//return token in json 
@@ -74,28 +82,31 @@ public class MyController {
 
 	@GetMapping(path = "/cwd", produces = MediaType.APPLICATION_JSON_VALUE)
 	public String cwd() {
-		//String cwd = userModel.curPath();
 		 String cwd = userModel.getCwd();
+		 LOGGER.info("Returning Current Working Directory");
 	     return cwd;
 	}	
 	
 	@GetMapping(path = "/ls", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ArrayList<LsModel> ls() {
 		ArrayList<LsModel> arraylist = lsModel.list();
+		LOGGER.info("Returning list of files and directories in the current working directory");
 		return (arraylist);
 	}
 	
 	@GetMapping(path = "/cd/{dir}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public String cd(@PathVariable(name= "dir") String dir) {
-		//String newPath = "";
-		String rootDir = userModel.curPath();	
+	public String cd(@PathVariable(name= "dir") String dir) throws FileNotFoundException  {
+		LOGGER.info("Entering in the /cd{dir} method..");
+		String rootDir = userModel.getCwd();	
 		Path filePath = Paths.get(dir);
 		if(Files.exists(filePath)) {
 			userModel.setCwd(rootDir + "/"+  dir);	
 		}
 		 else { 
-			    return "Not found!!";
+			    LOGGER.error("Directory not found!!!!");
+			    throw new FileNotFoundException("Not found!!!!");
 			 }
+		LOGGER.info("Updated directory");
 		return (rootDir + "/"+  dir);		
 	}
 }

@@ -1,6 +1,12 @@
 package com.assignment.restapi.model;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class JwtRequest  {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(JwtRequest .class);
+	
 	String username;
 	String password;
 	
@@ -29,6 +35,7 @@ public class JwtRequest  {
 	
 	@Override
 	public String toString() {
+		LOGGER.info("Returning Usename and Password");
 		return "JwtRequest [username=" + username + ", password=" + password + "]";
 	}
 }
