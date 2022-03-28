@@ -28,10 +28,12 @@ public class JwtUtil {
 	
 	//retrieve username from jwt token
 	public String getUsernameFromToken(String token) {
+		LOGGER.info("retrieve username from jwt token");
 		return getClaimFromToken(token, Claims::getSubject);
 	}
 	//retrieve expiration date from jwt token
 	public Date getExpirationDateFromToken(String token) {
+		LOGGER.info("retrieve expiration date from jwt token");
 		return getClaimFromToken(token, Claims::getExpiration);
 	}
 	public <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {
@@ -59,6 +61,8 @@ public class JwtUtil {
 	//   compaction of the JWT to a URL-safe string 
 	private String doGenerateToken(Map<String, Object> claims, String subject) {
 		LOGGER.info("Token Generation..");
+		LOGGER.debug("while creating the token claims of the token, like Issuer, Expiration, Subject, and the ID");
+		LOGGER.info("while creating the token claims of the token, like Issuer, Expiration, Subject, and the ID");
 		return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
 				.setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
 				.signWith(SignatureAlgorithm.HS512, secret).compact();

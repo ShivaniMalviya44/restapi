@@ -1,5 +1,6 @@
 package com.assignment.restapi.controller;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -9,7 +10,6 @@ import java.util.ArrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -45,9 +45,9 @@ public class MyController {
 	
 	@Autowired
 	private JwtUtil jwtUtil;
-	
-	private UserModel userModel= new UserModel() ;
-    private LsModel lsModel= new LsModel() ;
+
+	@Autowired
+	private UserModel userModel;
 	
 	@RequestMapping(value = "/login",method = RequestMethod.POST)
 	public ResponseEntity<?> generateToken(@RequestBody JwtRequest jwtRequest) throws Exception
@@ -56,14 +56,16 @@ public class MyController {
 		try {
 			this.authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(jwtRequest.getUsername(), jwtRequest.getPassword()));
 			
-		}catch(UsernameNotFoundException ex)
+		}catch(UsernameNotFoundException e)
 		{
 			LOGGER.error("User not found!");
-			return new ResponseEntity(ex.getMessage(), HttpStatus.NOT_FOUND);
-		}catch(BadCredentialsException ex)
+			e.printStackTrace();
+			throw new Exception("Usename not found");
+		}catch(BadCredentialsException e)
 		{
 			LOGGER.error("Bad Credential!");
-			return new ResponseEntity(ex.getMessage(), HttpStatus.NOT_FOUND);
+			 e.printStackTrace();
+	         throw new Exception("Bad Credentials");
 		}
 		
 		//fine area..
@@ -89,11 +91,26 @@ public class MyController {
 	
 	@GetMapping(path = "/ls", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ArrayList<LsModel> ls() {
-		ArrayList<LsModel> arraylist = lsModel.list();
-		LOGGER.info("Returning list of files and directories in the current working directory");
-		return (arraylist);
+		ArrayList<LsModel> arraylist = new ArrayList<LsModel>();
+		LOGGER.info("Entering in the /ls method..");
+	    //File curDir = new File(".");
+	    String cwd = userModel.getCwd();
+	    File curDir = new File(cwd);
+	    File[] filesList = curDir.listFiles();
+	    for(File f : filesList) {
+	        if(f.isFile()) {
+	        	LsModel obj = new LsModel(f.getName(), "FILE");
+	        	arraylist.add(obj);
+	        }
+	        else if (f.isDirectory()){
+	        	LsModel obj = new LsModel(f.getName(), "DIRECTORY");
+	        	arraylist.add(obj);
+	        }  
+	    }
+	    LOGGER.info("Returning list of files and directories in the current working directory");
+	    return (arraylist);
 	}
-	
+
 	@GetMapping(path = "/cd/{dir}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public String cd(@PathVariable(name= "dir") String dir) throws FileNotFoundException  {
 		LOGGER.info("Entering in the /cd{dir} method..");

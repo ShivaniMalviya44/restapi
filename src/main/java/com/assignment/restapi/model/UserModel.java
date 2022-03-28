@@ -1,5 +1,8 @@
 package com.assignment.restapi.model;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class UserModel {
 
 	private String cwd = System.getProperty("user.dir");
