@@ -13,6 +13,20 @@ import org.springframework.stereotype.Service;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 	
+	/*HashMap<String, String>  userMap  = new HashMap<>(); 
+	
+	public HashMap<String, String> getHashMap() {
+		return userMap;
+	}
+
+	public void setHashMap(HashMap<String, String> userMap) {
+		this.userMap = userMap;
+	}
+	
+	public void userDirectory(String username) {
+		userMap.put(username, System.getProperty("user.dir"));
+	}*/
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(CustomUserDetailsService.class);
 	
 	@Override

@@ -2,7 +2,6 @@ package com.assignment.restapi.model;
 
 public class JwtResponse  {
 	String token;
-
 	public JwtResponse() {
 
 	}

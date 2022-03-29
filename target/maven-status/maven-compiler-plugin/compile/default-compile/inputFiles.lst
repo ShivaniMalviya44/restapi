@@ -1,10 +1,13 @@
-/home/shivani/workspace/restapi/src/main/java/com/assignment/restapi/config/JwtAuthenticationFilter.java
 /home/shivani/workspace/restapi/src/main/java/com/assignment/restapi/model/JwtResponse.java
 /home/shivani/workspace/restapi/src/main/java/com/assignment/restapi/RestapiApplication.java
+/home/shivani/workspace/restapi/src/main/java/com/assignment/restapi/exception/ErrorMessage.java
 /home/shivani/workspace/restapi/src/main/java/com/assignment/restapi/util/JwtUtil.java
-/home/shivani/workspace/restapi/src/main/java/com/assignment/restapi/model/JwtRequest.java
 /home/shivani/workspace/restapi/src/main/java/com/assignment/restapi/config/SecurityConfig.java
-/home/shivani/workspace/restapi/src/main/java/com/assignment/restapi/model/LsModel.java
+/home/shivani/workspace/restapi/src/main/java/com/assignment/restapi/config/JwtAuthenticationEntryPoint.java
 /home/shivani/workspace/restapi/src/main/java/com/assignment/restapi/controller/MyController.java
 /home/shivani/workspace/restapi/src/main/java/com/assignment/restapi/services/CustomUserDetailsService.java
+/home/shivani/workspace/restapi/src/main/java/com/assignment/restapi/config/JwtAuthenticationFilter.java
+/home/shivani/workspace/restapi/src/main/java/com/assignment/restapi/model/JwtRequest.java
+/home/shivani/workspace/restapi/src/main/java/com/assignment/restapi/exception/UserExceptionHandler.java
+/home/shivani/workspace/restapi/src/main/java/com/assignment/restapi/model/LsModel.java
 /home/shivani/workspace/restapi/src/main/java/com/assignment/restapi/model/UserModel.java
